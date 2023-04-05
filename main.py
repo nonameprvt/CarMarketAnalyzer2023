@@ -40,8 +40,9 @@ for page in range(1, 6):
 
     for car in range(len(name)):
         if len(params[car].text.split(', ')) > 4:
+            specs = params[car].text.split(', ')
             mileage, engine, body, transmission, fuel = \
-                params[car].text.split(', ')
+                specs[0], specs[1], specs[2], specs[3], specs[4]
         else:
             mileage, engine, body, transmission, fuel = 'Ошибка', 'Ошибка', \
                                                         'Ошибка', 'Ошибка', \
@@ -52,7 +53,7 @@ for page in range(1, 6):
             car_name = 'Ошибка'
 
         if len(price) > 2 * car + 1:
-            car_price = price[car].get_attribute('content')
+            car_price = price[2 * car + 1].get_attribute('content')
         else:
             car_price = 'Ошибка'
 
@@ -72,7 +73,7 @@ for page in range(1, 6):
             car_description = 'Ошибка'
 
         if len(link) > car:
-            car_link = link[car].text
+            car_link = link[car].get_attribute('href')
         else:
             car_link = 'Ошибка'
 
