@@ -1,0 +1,2 @@
+
+python3 migrations/V01__create_current_market_states_table.py
