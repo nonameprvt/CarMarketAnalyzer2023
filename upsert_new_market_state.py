@@ -192,5 +192,3 @@ example_data = [
         'market_type': 'autoru',
     }
 ]
-
-upsert_new_data(example_data, '')
