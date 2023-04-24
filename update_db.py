@@ -10,8 +10,10 @@ def update_avito_db():
     time.sleep(2)
     upsert_new_market_state.upsert_new_data(data)
 
-schedule.every().day.at("22:35").do(update_avito_db)
+#schedule.every().day.at("13:18").do(update_avito_db)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)
+
+update_avito_db()

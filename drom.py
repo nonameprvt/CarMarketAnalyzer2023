@@ -31,13 +31,13 @@ while True:
             name = current.find_element(
                 By.XPATH, "//h1[contains(@class, 'css-1tjirrw')]").text
         except:
-            name = 'Неизвестно'
+            name = 'Ошибка'
 
         try:
             price = current.find_element(
                 By.XPATH, "//div[contains(@class, 'css-eazmxc')]").text
         except:
-            price = 'Неизвестно'
+            price = 'Ошибка'
 
         try:
             specs_data = current.find_elements(
@@ -48,7 +48,7 @@ while True:
             tmp = dict([(key.text, value.text) for i, (key, value) in
                           enumerate(zip(specs_txt, specs_data))])
 
-            specs = defaultdict(lambda: 'Неизвестно', tmp)
+            specs = defaultdict(lambda: 'Ошибка', tmp)
 
             engine = specs['Двигатель']
             hp = specs['Мощность'].split(',')[0]
@@ -59,14 +59,14 @@ while True:
             mileage = specs['Пробег, км']
             steering = specs['Руль']
         except:
-            engine = 'Неизвестно'
-            hp = 'Неизвестно'
-            gear = 'Неизвестно'
-            transmission = 'Неизвестно'
-            body = 'Неизвестно'
-            color = 'Неизвестно'
-            mileage = 'Неизвестно'
-            steering = 'Неизвестно'
+            engine = 'Ошибка'
+            hp = 'Ошибка'
+            gear = 'Ошибка'
+            transmission = 'Ошибка'
+            body = 'Ошибка'
+            color = 'Ошибка'
+            mileage = 'Ошибка'
+            steering = 'Ошибка'
 
         try:
             report = current.find_elements(
@@ -78,10 +78,10 @@ while True:
             wanted = report[2].text
             busted = report[3].text
         except:
-            documents_ok = 'Неизвестно'
-            owners = 'Неизвестно'
-            busted = 'Неизвестно'
-            wanted = 'Неизвестно'
+            documents_ok = 'Ошибка'
+            owners = 'Ошибка'
+            busted = 'Ошибка'
+            wanted = 'Ошибка'
 
         try:
             full_description_button = current.find_element(
@@ -99,7 +99,7 @@ while True:
                     By.XPATH, "//span[contains(@class, 'css-1kb7l9z')]")[1].text
 
             except:
-                description = 'Неизвестно'
+                description = 'Ошибка'
 
         link = str(current.current_url)
 

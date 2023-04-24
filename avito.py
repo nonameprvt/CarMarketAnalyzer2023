@@ -22,6 +22,8 @@ def get_parsed_avito():
     browser = webdriver.Chrome(options=options)
     browser.get("https://www.avito.ru/moskva_i_mo/avtomobili")
 
+    time.sleep(5)
+
     # Нажимаем кнопку "Все авто"
     all_brands_button = browser.find_element(
         By.XPATH, "//button[contains(@class, 'popular-rubricator-button')]")
@@ -36,11 +38,16 @@ def get_parsed_avito():
     # checker = 1
 
     for brand in brands:
+        print('start parsing brand')
         # checker += 1
         page_link = brand.get_attribute('href')
 
+        time.sleep(1)
+
         brand_browser = webdriver.Chrome(options=options)
         brand_browser.get(page_link)
+
+        time.sleep(1)
 
         all_models_button = brand_browser.find_elements(
             By.XPATH,
@@ -55,12 +62,19 @@ def get_parsed_avito():
             By.XPATH, "//a[contains(@class, 'popular-rubricator-link-Hrkjd')]")
 
         for model in models:
+            print('start parsing model')
             model_link = model.get_attribute('href')
+
+            time.sleep(1)
 
             model_browser = webdriver.Chrome(options=options)
             model_browser.get(model_link)
 
+            page_idx = 0
+
             while True:
+                page_idx += 1
+                time1 = time.time()
                 # Проверяем, есть ли автомобили на этой странице.
                 check_no_results = False
                 try:
@@ -70,9 +84,10 @@ def get_parsed_avito():
                     check_no_results = True
 
                 if not check_no_results:
+                    print('no results')
                     break
 
-                time.sleep(2)
+                time.sleep(1)
 
                 name = model_browser.find_elements(By.XPATH,
                                                 "//h3[contains(@itemprop, 'name')]")
@@ -102,7 +117,7 @@ def get_parsed_avito():
                     By.XPATH, "//a[contains(@data-marker, 'item-title')]")
                 # достаем -> .get_attribute('href')
 
-                time.sleep(2)
+                time.sleep(1)
 
                 for car in range(len(name)):
                     car_json = {
@@ -150,7 +165,8 @@ def get_parsed_avito():
 
                     data.append(car_json)
 
-                time.sleep(2)
+                time.sleep(1)
+                print("Parsed car = " + car_json['name'] + " with time = " + str(time.time() - time1) + " page = " + str(page_idx))
 
                 # Переход на следующую страницу
                 try:
