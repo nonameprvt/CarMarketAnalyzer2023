@@ -18,9 +18,9 @@ cur.execute(
     'id SERIAL PRIMARY KEY NOT NULL,'
     'item_id TEXT NOT NULL,'
     'name TEXT NOT NULL,'
-    'price TEXT,'
+    'price INTEGER,'
     'engine TEXT,'
-    'mileage TEXT,'
+    'mileage INTEGER,'
     'body_type TEXT,'
     'fuel_type TEXT,'
     'transmission TEXT,'
@@ -29,7 +29,7 @@ cur.execute(
     'description TEXT,'
     'link TEXT,'
     'market_type TEXT NOT NULL,'
-    'predicted_price TEXT'
+    'predicted_price INTEGER'
     ');'
 )
 
@@ -43,9 +43,9 @@ cur.execute(
     'id SERIAL PRIMARY KEY NOT NULL,'
     'item_id TEXT NOT NULL,'
     'name TEXT NOT NULL,'
-    'price TEXT,'
+    'price INTEGER,'
     'engine TEXT,'
-    'mileage TEXT,'
+    'mileage INTEGER,'
     'body_type TEXT,'
     'fuel_type TEXT,'
     'transmission TEXT,'
@@ -54,7 +54,7 @@ cur.execute(
     'description TEXT,'
     'link TEXT,'
     'market_type TEXT NOT NULL,'
-    'predicted_price TEXT'
+    'predicted_price INTEGER'
     ');'
 )
 

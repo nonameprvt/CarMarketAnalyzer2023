@@ -11,7 +11,7 @@ def get_car_ids(parsed_data):
     return car_ids
 
 
-def move_selled_cars(data, market_type):
+def move_selled_cars(data, market_type, brand_name, model_name=None):
     con = connect(
         user=db_properties.LOGIN,
         database=db_properties.DATABASE,
@@ -24,29 +24,53 @@ def move_selled_cars(data, market_type):
 
     car_ids = get_car_ids(data)
 
-    cur.execute(
-        'SELECT '
-        'item_id, name, price, engine, '
-        'mileage, body_type, fuel_type, '
-        'transmission, seller_type, city, description, '
-        'link, market_type, predicted_price '
-        'FROM current_cars_market_states '
-        'WHERE market_type = %s AND item_id NOT IN %s',
-        (market_type, tuple(car_ids))
-    )
+    if model_name is not None:
+        cur.execute(
+            'SELECT '
+            'item_id, name, price, engine, '
+            'mileage, body_type, fuel_type, '
+            'transmission, seller_type, city, description, '
+            'link, market_type, predicted_price, horse_power, '
+            'color, gear_box, steering_wheel_side, documents_ok, '
+            'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten '
+            'FROM current_cars_market_states '
+            'WHERE market_type = %s AND item_id NOT IN %s AND brand_name = %s AND model_name = %s;',
+            (market_type, tuple(car_ids), brand_name, model_name)
+        )
+    else:
+        cur.execute(
+            'SELECT '
+            'item_id, name, price, engine, '
+            'mileage, body_type, fuel_type, '
+            'transmission, seller_type, city, description, '
+            'link, market_type, predicted_price, horse_power, '
+            'color, gear_box, steering_wheel_side, documents_ok, '
+            'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten '
+            'FROM current_cars_market_states '
+            'WHERE market_type = %s AND item_id NOT IN %s AND brand_name = %s;',
+            (market_type, tuple(car_ids), brand_name)
+        )
 
     selled_cars = cur.fetchall()
 
     if not selled_cars:
+        print('no selled cars')
         return
 
-    cur.execute(
-        'DELETE FROM current_cars_market_states '
-        'WHERE market_type = %s AND item_id NOT IN %s',
-        (market_type, tuple(car_ids))
-    )
+    if model_name is not None:
+        cur.execute(
+            'DELETE FROM current_cars_market_states '
+            'WHERE market_type = %s AND item_id NOT IN %s AND brand_name = %s AND model_name = %s',
+            (market_type, tuple(car_ids), brand_name, model_name)
+        )
+    else:
+        cur.execute(
+            'DELETE FROM current_cars_market_states '
+            'WHERE market_type = %s AND item_id NOT IN %s AND brand_name = %s',
+            (market_type, tuple(car_ids), brand_name)
+        )
 
-    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", i).decode('utf-8')
+    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", i).decode('utf-8')
                 for i in selled_cars)
 
     cur.execute(
@@ -54,8 +78,87 @@ def move_selled_cars(data, market_type):
         'item_id, name, price, engine, '
         'mileage, body_type, fuel_type, '
         'transmission, seller_type, city, description, '
-        'link, market_type, predicted_price) '
-        'VALUES ' + (args)
+        'link, market_type, predicted_price, horse_power, '
+        'color, gear_box, steering_wheel_side, documents_ok, '
+        'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten) '
+        'VALUES ' + (args) + ' ON CONFLICT DO NOTHING;'
+    )
+
+    cur.close()
+    con.close()
+
+
+def move_fake_selled_cars_back(data, market_type, brand_name, model_name=None):
+    con = connect(
+        user=db_properties.LOGIN,
+        database=db_properties.DATABASE,
+        host=db_properties.IP,
+        password=db_properties.PASSWORD,
+        port=db_properties.PORT
+    )
+    con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cur = con.cursor()
+
+    car_ids = get_car_ids(data)
+
+    if model_name is not None:
+        cur.execute(
+            'SELECT '
+            'item_id, name, price, engine, '
+            'mileage, body_type, fuel_type, '
+            'transmission, seller_type, city, description, '
+            'link, market_type, predicted_price, horse_power, '
+            'color, gear_box, steering_wheel_side, documents_ok, '
+            'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten '
+            'FROM selled_cars '
+            'WHERE market_type = %s AND item_id IN %s AND brand_name = %s AND model_name = %s;',
+            (market_type, tuple(car_ids), brand_name, model_name)
+        )
+    else:
+        cur.execute(
+            'SELECT '
+            'item_id, name, price, engine, '
+            'mileage, body_type, fuel_type, '
+            'transmission, seller_type, city, description, '
+            'link, market_type, predicted_price, horse_power, '
+            'color, gear_box, steering_wheel_side, documents_ok, '
+            'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten '
+            'FROM selled_cars '
+            'WHERE market_type = %s AND item_id IN %s AND brand_name = %s;',
+            (market_type, tuple(car_ids), brand_name)
+        )
+
+    selled_cars = cur.fetchall()
+
+    if not selled_cars:
+        print('no fake selled cars')
+        return
+
+    if model_name is not None:
+        cur.execute(
+            'DELETE FROM selled_cars '
+            'WHERE market_type = %s AND item_id IN %s AND brand_name = %s AND model_name = %s',
+            (market_type, tuple(car_ids), brand_name, model_name)
+        )
+    else:
+        cur.execute(
+            'DELETE FROM selled_cars '
+            'WHERE market_type = %s AND item_id IN %s AND brand_name = %s',
+            (market_type, tuple(car_ids), brand_name)
+        )
+
+    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", i).decode('utf-8')
+                for i in selled_cars)
+
+    cur.execute(
+        'INSERT INTO current_cars_market_states('
+        'item_id, name, price, engine, '
+        'mileage, body_type, fuel_type, '
+        'transmission, seller_type, city, description, '
+        'link, market_type, predicted_price, horse_power, '
+        'color, gear_box, steering_wheel_side, documents_ok, '
+        'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten) '
+        'VALUES ' + (args) + ' ON CONFLICT DO NOTHING;'
     )
 
     cur.close()
@@ -73,7 +176,7 @@ def upsert_new_data(data):
     con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = con.cursor()
 
-    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(i.values())).decode('utf-8')
+    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(i.values())).decode('utf-8')
                 for i in data)
 
     cur.execute(
@@ -81,7 +184,9 @@ def upsert_new_data(data):
         'item_id, name, price, engine,'
         'mileage, body_type, fuel_type,'
         'transmission, seller_type, city, description,'
-        'link, market_type) '
+        'link, market_type, horse_power, '
+        'color, gear_box, steering_wheel_side, documents_ok, '
+        'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten) '
         'VALUES ' + (args) +
         'ON CONFLICT (item_id, market_type) DO UPDATE SET '
         'name = EXCLUDED.name,'
@@ -95,6 +200,8 @@ def upsert_new_data(data):
         'city = EXCLUDED.city,'
         'description = EXCLUDED.description;'
     )
+
+    print('insert values')
 
     cur.close()
     con.close()

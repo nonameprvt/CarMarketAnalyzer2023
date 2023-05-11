@@ -1,19 +1,18 @@
-import upsert_new_market_state
-from avito import get_parsed_avito
-import schedule
-import time
+from avito import get_parsed_avito, CaptchaException
 
-def update_avito_db():
-    data = get_parsed_avito()
-    time.sleep(2)
-    upsert_new_market_state.move_selled_cars(data, 'avito')
-    time.sleep(2)
-    upsert_new_market_state.upsert_new_data(data)
+should_parse_big_brands = True
+brand_to_start = None
+model_to_start = None
 
-#schedule.every().day.at("13:18").do(update_avito_db)
-
-#while True:
-#    schedule.run_pending()
-#    time.sleep(1)
-
-update_avito_db()
+while True:
+    if brand_to_start is None:
+        should_parse_big_brands = not should_parse_big_brands
+    try:
+        get_parsed_avito(should_parse_big_brands, brand_to_start, model_to_start)
+        brand_to_start = None
+        model_to_start = None
+    except CaptchaException as e:
+        print(e)
+        if should_parse_big_brands:
+            model_to_start = str(e).split(';')[1]
+        brand_to_start = str(e).split(';')[0]
