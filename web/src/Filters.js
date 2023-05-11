@@ -1,0 +1,224 @@
+import React, { Component } from 'react';
+import axios from 'axios';
+import CarSearchResults from './CarSearchResults';
+
+class CarSearch extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      brands: [], // список марок машин
+      models: [], // список моделей машин
+      fuel_types: [], 
+      body_types: [],
+      selectedBrand: null, // выбранная марка машины
+      selectedModel: null, // выбранная модель машины
+      selectedFuelType: null,
+      selectedBodyType: null,
+      minYear: null,
+      maxYear: null,
+      minHorsePower: null,
+      maxHorsePower: null,
+      minMileage: null,
+      maxMileage: null,
+      minPrice: null,
+      maxPrice: null,
+      showBittenCars: false,
+      showResults: false // флаг, показывающий результаты поиска или нет
+    }
+  }
+
+  componentDidMount() {
+    // при монтировании компонента загружаем список марок машин
+    axios.get('http://127.0.0.1:5000/brand/list')
+      .then(response => {
+        this.setState({ brands: response.data });
+      })
+      .catch(error => console.log(error));
+
+    axios.get('http://127.0.0.1:5000/fuel-type/list')
+      .then(response => {
+        this.setState({ fuel_types: response.data });
+      })
+      .catch(error => console.log(error));
+
+    axios.get('http://127.0.0.1:5000/body-type/list')
+      .then(response => {
+        this.setState({ body_types: response.data });
+      })
+      .catch(error => console.log(error));
+  }
+
+  handleBrandChange = (event) => {
+    const selectedBrand = event.target.value;
+    this.setState({ selectedBrand, selectedModel: null, models: [] });
+    // после выбора марки машины загружаем список моделей
+    axios.get(`http://127.0.0.1:5000/model/list?brand=${selectedBrand}`)
+    .then(response => {
+      this.setState({ models: response.data });
+    })
+    .catch(error => console.log(error));
+  }
+
+  handleModelChange = (event) => {
+    this.setState({ selectedModel: event.target.value });
+  }
+
+  handleFuelTypeChange = (event) => {
+    this.setState({ selectedFuelType: event.target.value });
+  }
+
+  handleBodyTypeChange = (event) => {
+    this.setState({ selectedBodyType: event.target.value });
+  }
+
+  handleTestChange = (event) => {
+    this.setState({ test: event.target.value });
+  }
+
+  handleMinYearChange = (event) => {
+    this.setState({ minYear: event.target.value });
+  }
+
+  handleMaxYearChange = (event) => {
+    this.setState({ maxYear: event.target.value });
+  }
+
+  handleMinPriceChange = (event) => {
+    this.setState({ minPrice: event.target.value });
+  }
+
+  handleMaxPriceChange = (event) => {
+    this.setState({ maxPrice: event.target.value });
+  }
+
+  handleMinHorsePowerChange = (event) => {
+    this.setState({ minHorsePower: event.target.value });
+  }
+
+  handleMaxHorsePowerChange = (event) => {
+    this.setState({ maxHorsePower: event.target.value });
+  }
+
+  handleMinMileageChange = (event) => {
+    this.setState({ minMileage: event.target.value });
+  }
+
+  handleMaxMileageChange = (event) => {
+    this.setState({ maxMileage: event.target.value });
+  }
+
+  handleShowBittenChange = () => {
+    this.setState({ showBittenCars: !this.showBittenCars });
+  }
+
+  handleSearchClick = () => {
+    this.setState({ showResults: true });
+  }
+
+  render() {
+    const {
+      brands,
+      models,
+      fuel_types,
+      body_types,
+      selectedBrand,
+      selectedModel,
+      selectedFuelType,
+      selectedBodyType,
+      showResults,
+      showBittenCars,
+      minYear,
+      maxYear,
+      minHorsePower,
+      maxHorsePower,
+      minMileage,
+      maxMileage,
+      minPrice,
+      maxPrice,
+    } = this.state;
+
+    return (
+      <div>
+        <div>
+          <label>Марка машины:</label>
+          <select value={selectedBrand} onChange={this.handleBrandChange}>
+            <option value="">Выбрать марку машины</option>
+            {brands.map(brand => (
+              <option key={brand.id} value={brand.name}>{brand.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Модель машины:</label>
+          <select value={selectedModel} onChange={this.handleModelChange} disabled={!selectedBrand}>
+            <option value="">Выбрать модель машины</option>
+            {models.map(model => (
+              <option key={model.id} value={model.name}>{model.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Год выпуска:</label>
+          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinYearChange}></input>
+          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxYearChange}></input>
+        </div>
+
+        <div>
+          <label>Тип двигателя:</label>
+          <select value={selectedFuelType} onChange={this.handleFuelTypeChange} >
+            <option value="">Выбрать тип двигателя</option>
+            {fuel_types.map(fuel_type => (
+              <option key={fuel_type} value={fuel_type}>{fuel_type}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Тип кузова:</label>
+          <select value={selectedBodyType} onChange={this.handleBodyTypeChange} >
+            <option value="">Выбрать тип кузова</option>
+            {body_types.map(body_type => (
+              <option key={body_type} value={body_type}>{body_type}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Количество лошадиных сил:</label>
+          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinHorsePowerChange}></input>
+          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxHorsePowerChange}></input>
+        </div>
+
+        <div>
+          <label>Пробег:</label>
+          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinMileageChange}></input>
+          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxMileageChange}></input>
+        </div>
+
+        <div>
+          <label>Показывать ли битые машины</label>
+          <input type="checkbox" onChange={this.handleShowBittenChange}></input>
+        </div>
+
+        <div>
+          <label>Цена:</label>
+          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinPriceChange}></input>
+          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxPriceChange}></input>
+        </div>
+
+        <button onClick={this.handleSearchClick}>Поиск</button>
+
+        {showResults && (
+          <div>
+            <CarSearchResults brand={selectedBrand} model={selectedModel} minYear={minYear} maxYear={maxYear} fuel_type={selectedFuelType} body_type={selectedBodyType} show_bitten_cars={showBittenCars} minPrice={minPrice} maxPrice={maxPrice} minHorsePower={minHorsePower} maxHorsePower={maxHorsePower} minMileage={minMileage} maxMileage={maxMileage} />
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+export default CarSearch;
+
