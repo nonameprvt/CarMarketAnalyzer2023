@@ -130,7 +130,7 @@ env.bak/
 venv.bak/
 
 migrations/db_properties.py
-db_funcs/db_properties.py
+db_properties.py
 
 # Spyder project settings
 .spyderproject

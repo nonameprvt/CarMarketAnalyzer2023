@@ -1,2 +1,3 @@
 
 python3 migrations/V01__create_current_market_states_table.py
+python3 migrations/V02__add_drom_columns.py
