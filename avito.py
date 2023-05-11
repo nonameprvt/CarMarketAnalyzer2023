@@ -9,7 +9,6 @@ from selenium.webdriver.chrome.options import Options
 class CaptchaException(Exception):
     pass
 
-
 def parse_item_id_by_link(link):
     link_arr = link.split(sep='_')
     return link_arr[-1]
