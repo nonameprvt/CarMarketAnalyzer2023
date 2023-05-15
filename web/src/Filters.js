@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import CarSearchResults from './CarSearchResults';
+import ButtonModal from './ButtonModal';
+import "./Filters.css";
+import "./Select.css";
 
 class CarSearch extends Component {
   constructor(props) {
@@ -23,7 +26,6 @@ class CarSearch extends Component {
       minPrice: null,
       maxPrice: null,
       showBittenCars: false,
-      showResults: false // флаг, показывающий результаты поиска или нет
     }
   }
 
@@ -111,10 +113,6 @@ class CarSearch extends Component {
     this.setState({ showBittenCars: !this.showBittenCars });
   }
 
-  handleSearchClick = () => {
-    this.setState({ showResults: true });
-  }
-
   render() {
     const {
       brands,
@@ -125,7 +123,6 @@ class CarSearch extends Component {
       selectedModel,
       selectedFuelType,
       selectedBodyType,
-      showResults,
       showBittenCars,
       minYear,
       maxYear,
@@ -138,83 +135,81 @@ class CarSearch extends Component {
     } = this.state;
 
     return (
-      <div>
-        <div>
-          <label>Марка машины:</label>
+      <div class="container">
+        <div class="left-column">
           <select value={selectedBrand} onChange={this.handleBrandChange}>
-            <option value="">Выбрать марку машины</option>
+            <option value="" >Выбрать марку машины</option>
             {brands.map(brand => (
               <option key={brand.id} value={brand.name}>{brand.name}</option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label>Модель машины:</label>
           <select value={selectedModel} onChange={this.handleModelChange} disabled={!selectedBrand}>
             <option value="">Выбрать модель машины</option>
             {models.map(model => (
               <option key={model.id} value={model.name}>{model.name}</option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label>Год выпуска:</label>
-          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinYearChange}></input>
-          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxYearChange}></input>
-        </div>
-
-        <div>
-          <label>Тип двигателя:</label>
           <select value={selectedFuelType} onChange={this.handleFuelTypeChange} >
             <option value="">Выбрать тип двигателя</option>
             {fuel_types.map(fuel_type => (
               <option key={fuel_type} value={fuel_type}>{fuel_type}</option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label>Тип кузова:</label>
           <select value={selectedBodyType} onChange={this.handleBodyTypeChange} >
             <option value="">Выбрать тип кузова</option>
             {body_types.map(body_type => (
               <option key={body_type} value={body_type}>{body_type}</option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label>Количество лошадиных сил:</label>
-          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinHorsePowerChange}></input>
-          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxHorsePowerChange}></input>
-        </div>
+          <ButtonModal
+            buttonText="Год выпуска"
+            handleMinChange={this.handleMinYearChange}
+            handleMaxChange={this.handleMaxYearChange}
+            className="modal"/>
 
-        <div>
-          <label>Пробег:</label>
-          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinMileageChange}></input>
-          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxMileageChange}></input>
-        </div>
+          <ButtonModal
+            buttonText="Кол-во лошадиных сил"
+            handleMinChange={this.handleMinHorsePowerChange}
+            handleMaxChange={this.handleMaxHorsePowerChange}
+            className="modal"/>
 
-        <div>
-          <label>Показывать ли битые машины</label>
+          <ButtonModal
+            buttonText="Пробег"
+            handleMinChange={this.handleMinMileageChange}
+            handleMaxChange={this.handleMaxMileageChange}
+            className="modal"/>
+
+          <ButtonModal
+            buttonText="Цена"
+            handleMinChange={this.handleMinPriceChange}
+            handleMaxChange={this.handleMaxPriceChange}
+            className="modal"/>
+
+          <label>Показывать битые машины?</label>
           <input type="checkbox" onChange={this.handleShowBittenChange}></input>
         </div>
 
-        <div>
-          <label>Цена:</label>
-          <input class="input-number" type="text" placeholder="От" onChange={this.handleMinPriceChange}></input>
-          <input class="input-number" type="text" placeholder="До" onChange={this.handleMaxPriceChange}></input>
+        <div class="right-column">
+          <h1>Результаты поиска:</h1>
+          <CarSearchResults
+            brand={selectedBrand}
+            model={selectedModel}
+            minYear={minYear}
+            maxYear={maxYear}
+            fuel_type={selectedFuelType}
+            body_type={selectedBodyType}
+            show_bitten_cars={showBittenCars}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            minHorsePower={minHorsePower} 
+            maxHorsePower={maxHorsePower}
+            minMileage={minMileage}
+            maxMileage={maxMileage}/>
         </div>
-
-        <button onClick={this.handleSearchClick}>Поиск</button>
-
-        {showResults && (
-          <div>
-            <CarSearchResults brand={selectedBrand} model={selectedModel} minYear={minYear} maxYear={maxYear} fuel_type={selectedFuelType} body_type={selectedBodyType} show_bitten_cars={showBittenCars} minPrice={minPrice} maxPrice={maxPrice} minHorsePower={minHorsePower} maxHorsePower={maxHorsePower} minMileage={minMileage} maxMileage={maxMileage} />
-          </div>
-        )}
       </div>
     );
   }

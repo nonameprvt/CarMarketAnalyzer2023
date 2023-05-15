@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import "./CarSearchResults.css";
 
 class CarSearchResults extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class CarSearchResults extends Component {
       <div>
         <ul>
           {cars.map(car => (
-            <li key={car.id}>{car.brand} {car.model}, {car.body_type}, {car.fuel_type}, {car.transmission}, {car.engine} ({car.year}) Цена: {car.price}, Пробег: {car.mileage}, Битая: {car.is_bitten} <a href={car.link} rel="noreferrer" target="_blank">{car.market_type}</a></li>
+            <li key={car.id} class="product-wrapper">{car.brand} {car.model}, {car.body_type}, {car.fuel_type}, {car.transmission}, {car.engine} ({car.year}) Цена: {car.price}, Пробег: {car.mileage}, Битая: {car.is_bitten} <a href={car.link} rel="noreferrer" target="_blank">{car.market_type}</a></li>
               ))}
         </ul>
 

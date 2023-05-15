@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+  
+.left-column {
+    width: 20%;
+}
+
+.left-column select {
+    width: 250px;
+}
+
+.left-column button {
+    width: 250px;
+}
+  
+.right-column {
+    width: 70%;
+}
+  

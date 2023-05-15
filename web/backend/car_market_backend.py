@@ -37,6 +37,10 @@ def check_query_param_exist(param):
     return param is not None and param not in ['null', 'undefined', 'NaN', '']
 
 
+def check_param_is_digit(param):
+    return param.isdigit()
+
+
 def build_where_statement(
         brand=None,
         model=None,
@@ -67,9 +71,9 @@ def build_where_statement(
         where_statement += build_statement_prefix(where_statement) + ' body_type = \'' + body_type + '\''
     if check_query_param_exist(show_bitten_cars):
         where_statement += build_statement_prefix(where_statement) + ' NOT is_bitten'
-    if check_query_param_exist(min_price):
+    if check_query_param_exist(min_price) and check_param_is_digit(min_price):
         where_statement += build_statement_prefix(where_statement) + ' price >= ' + min_price
-    if check_query_param_exist(max_price):
+    if check_query_param_exist(max_price) and check_param_is_digit(max_price):
         where_statement += build_statement_prefix(where_statement) + ' price <= ' + max_price
     if check_query_param_exist(min_horse_power):
         where_statement += build_statement_prefix(where_statement) + ' horse_power >= ' + min_horse_power
