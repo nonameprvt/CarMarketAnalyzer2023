@@ -1,30 +1,45 @@
-.product-wrapper {
-	display: block;
-	border: 1px solid #b5e9a7;
-	border-radius: 3px;
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.button-slider {
+    position: relative;
+    left: 20px;
+    width: 460px;
+}
+
+.tab-content {
+	height: 150px;
+	width: 200px;
+	flex-flow: column wrap;
 	position: relative;
-	background: #ffffff;
-	margin: 0 20px 20px 0;
-	text-decoration: none;
-	color: #474747;
-	z-index: 0;
-	height: 100px;
+    border-color: #f5eded;
+    border-style: solid;
+    border-width: 2px 2px 2px;
+    overflow: auto;
+    padding: 10px;
+    background: #b6b6e0;
+    border: 5px solid #ffffff;
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0px 4px 10px rgba(35, 33, 33, 0.12), 1px -2px 30px 1px rgba(53, 49, 49, 0.27);
+}
+.tab-content:hover {
+    font-size: 14px;
+    border: 5px solid #fe6637;
+}
+ul.s3 {
+  display: flex;
+  flex-wrap: wrap;
+}
+ul.s3 li {
+  flex-basis: 25%;
+  display: block;
 }
 
-@media only screen and (min-width: 450px) {
-	.product-wrapper {
-		width: 50%;
-	}
-}
-
-@media only screen and (min-width: 768px) {
-	.product-wrapper {
-		width: 33.333%;
-	}
-}
-
-@media only screen and (min-width: 1000px) {
-	.product-wrapper {
-		width: 25%;
-	}
+.car-table {
+    position: relative;
+    left: -43px;
 }

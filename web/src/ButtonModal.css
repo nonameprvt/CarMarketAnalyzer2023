@@ -1,3 +1,4 @@
+.button-slider,
 .button {
     text-decoration: none;
     display: inline-block;
@@ -11,6 +12,7 @@
     color: #fe6637;
     transition: .2s ease-in-out;
 }
+.button-slider:before,
 .button:before {
     content: "";
     background: linear-gradient(90deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .5));
@@ -21,12 +23,18 @@
     left: -75px;
     transform: skewX(-45deg);
 }
+.button-slider:hover,
 .button:hover {
     background: #fe6637;
     color: #fff;
     cursor: pointer;
 }
+.button-slider:hover:before,
 .button:hover:before {
     left: 150px;
     transition: .5s ease-in-out;
+}
+.button-slider:disabled,
+.button:disabled {
+    cursor: not-allowed;
 }

@@ -5,6 +5,8 @@
 }
   
 .left-column {
+    position: relative;
+    top: 77px;
     width: 20%;
 }
 
@@ -18,5 +20,4 @@
   
 .right-column {
     width: 70%;
-}
-  
+} 

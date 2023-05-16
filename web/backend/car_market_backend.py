@@ -158,7 +158,7 @@ def cars_search():
         request.args.get('min_mileage'),
         request.args.get('max_mileage')
     )
-    sz = int(cursor) * 10 + 11
+    sz = int(cursor) * 11 + 12
     sql_text = (
         'SELECT item_id, brand_name, model_name, year, body_type, '
         'fuel_type, mileage, engine, transmission, horse_power, is_bitten, '
@@ -172,7 +172,7 @@ def cars_search():
     response = {'results': [], 'has_next_page': has_next_page}
     car_list = []
 
-    for i in range(max(int(cursor) * 10, 0), len(tmp)):
+    for i in range(max(int(cursor) * 11, 0), len(tmp)):
         car_list.append({
             'id': tmp[i][0],
             'brand': tmp[i][1],

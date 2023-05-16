@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import "./ButtonModal.css";
 import "./CarSearchResults.css";
 
 class CarSearchResults extends Component {
@@ -69,15 +70,25 @@ class CarSearchResults extends Component {
     }
 
     return (
-      <div>
-        <ul>
+      <div class="car-table">
+		<ul class="s3">
           {cars.map(car => (
-            <li key={car.id} class="product-wrapper">{car.brand} {car.model}, {car.body_type}, {car.fuel_type}, {car.transmission}, {car.engine} ({car.year}) Цена: {car.price}, Пробег: {car.mileage}, Битая: {car.is_bitten} <a href={car.link} rel="noreferrer" target="_blank">{car.market_type}</a></li>
+            <li><a href={car.link} class="link" rel="noreferrer" target="_blank"><ul class="tab-content" key={car.id}>
+			  <li> Название: {car.brand} {car.model} </li> 
+			  <li> Вид кузова: {car.body_type}</li>
+			  <li> Вид топлива: {car.fuel_type}</li> 
+			  <li> Привод: {car.transmission}</li> 
+			  <li> Двигатель: {car.engine}</li> 
+			  <li> Год выпуска: {car.year}</li> 
+			  <li> Цена: {car.price}</li> 
+			  <li> Пробег: {car.mileage}</li> 
+			  <li> Битая: {car.is_bitten}</li> 
+			</ul></a></li>
               ))}
-        </ul>
+			  </ul>
 
-        <button onClick={this.handlePrevClick} disabled={cursor <= 0}>Предыдущая страница</button>
-        <button onClick={this.handleNextClick} disabled={!has_next_page}>Следующая страница</button>
+        <button class="button-slider" onClick={this.handlePrevClick} disabled={cursor <= 0}>Предыдущая страница</button>
+        <button class="button-slider" onClick={this.handleNextClick} disabled={!has_next_page}>Следующая страница</button>
       </div>
     );
   }

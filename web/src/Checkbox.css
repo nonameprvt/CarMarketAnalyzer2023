@@ -1,0 +1,61 @@
+.checkbox-input {
+    position: absolute;
+    margin-left: -9999px;
+    visibility: hidden;
+}
+.checkbox-input + label {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 30px;
+    margin: 10px 20px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #fe6637;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    color: #fe6637;
+    transition: .2s ease-in-out;
+}
+.checkbox-input + label:hover {
+    cursor: pointer;
+    font-size: 15px !important;
+}
+
+input.checkbox-input-yes-no + label {
+    padding: 2px;
+    width: 241px;
+    height: 35px;
+}
+input.checkbox-input-yes-no + label:before,
+input.checkbox-input-yes-no + label:after {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    font-family: "Montserrat", sans-serif;
+    text-align: center;
+    line-height: 35px;
+}
+input.checkbox-input-yes-no + label:before {
+    background-color: #dddddd;
+    color: #fe6637;
+    content: attr(data-off);
+    transition: transform 0.5s;
+    backface-visibility: hidden;
+}
+input.checkbox-input-yes-no + label:after {
+    background-color: #fe6637;
+    color: #fff;
+    content: attr(data-on);
+    transition: transform 0.5s;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+input.checkbox-input-yes-no:checked + label:before {
+    transform: rotateY(180deg);
+}
+input.checkbox-input-yes-no:checked + label:after {
+    transform: rotateY(0);
+}

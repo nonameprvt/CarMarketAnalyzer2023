@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CarSearchResults from './CarSearchResults';
 import ButtonModal from './ButtonModal';
+import "./Checkbox.css";
 import "./Filters.css";
 import "./Select.css";
 
@@ -189,8 +190,10 @@ class CarSearch extends Component {
             handleMaxChange={this.handleMaxPriceChange}
             className="modal"/>
 
-          <label>Показывать битые машины?</label>
-          <input type="checkbox" onChange={this.handleShowBittenChange}></input>
+          <div class="switch">
+            <input id="checkbox-id" class="checkbox-input checkbox-input-yes-no" type="checkbox" onChange={this.handleShowBittenChange}/>
+            <label for="checkbox-id" data-on="Показывать битые машины" data-off="Не показывать битые машины"></label>
+          </div>
         </div>
 
         <div class="right-column">
