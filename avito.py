@@ -59,7 +59,7 @@ def get_by_pages(browser, brand_name):
 
         params = browser.find_elements(
             By.XPATH,
-            "//div[contains(@data-marker, 'item-specific-params')]")
+            "//p[contains(@data-marker, 'item-specific-params')]")
         # достаем -> .text.split(', '), получаем массив характеристик
 
         description = browser.find_elements(
@@ -87,8 +87,6 @@ def get_by_pages(browser, brand_name):
 
             if len(link) <= car:
                 continue
-
-            cnt += 1
                 
             car_json = {
                 'item_id': 'Ошибка',
@@ -123,7 +121,6 @@ def get_by_pages(browser, brand_name):
                 car_json['link'])
 
             if car_json['item_id'] in car_ids:
-                print('found item id = ' + car_json['item_id'])
                 continue
             else:
                 car_ids.append(car_json['item_id'])
@@ -156,7 +153,8 @@ def get_by_pages(browser, brand_name):
 
             if len(name) > car:
                 car_json['name'] = name[car].text
-                if car_json['name'] == '':
+                if car_json['name'] == '' or car_json['name'] == 'Ошибка':
+                    print('Bad car name')
                     continue
                 brand_name_size = len(brand_name.split(' '))
                 splitted_name = car_json['name'].split(', ')
@@ -188,6 +186,8 @@ def get_by_pages(browser, brand_name):
                 print(car_json['link'])
 
             data.add(json.dumps(car_json))
+
+            cnt += 1
 
         time.sleep(4)
 
@@ -254,7 +254,7 @@ def get_parsed_avito(should_parse_big_brands=False, brand_to_start=None, model_t
             "//span[contains(@data-marker, 'page-title/count')]")
 
         if not should_parse_big_brands and len(brand_size) > 0 and int(brand_size[0].text.replace(' ', '')) < 5000:
-            print("parse by brand")
+            print("parse by brand", brand_name)
             data = []
             parsed_data = get_by_pages(brand_browser, brand_name)
             for item in parsed_data:
