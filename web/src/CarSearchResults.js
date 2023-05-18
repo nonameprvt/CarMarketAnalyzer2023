@@ -7,10 +7,10 @@ class CarSearchResults extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cars: [], // список машин
+      cars: [],
       has_next_page: true,
-      cursor: 0, // положение курсора в списке машин
-      isLoading: true // флаг загрузки данных с сервера
+      cursor: 0,
+      isLoading: true
 
     }
   }
@@ -20,7 +20,6 @@ class CarSearchResults extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // при обновлении компонента или изменении выбранных марки и модели машин, загружаем первую страницу списка машин
     if (Object.keys(prevProps).some(key => prevProps[key] !== this.props[key])) {
       this.fetchCars(0);
     }
@@ -28,33 +27,41 @@ class CarSearchResults extends Component {
 
   handlePrevClick = () => {
     const { cursor } = this.state;
-    // выполняем запрос на сервер для получения предыдущей страницы списка машин
     this.fetchCars(cursor - 1);
   }
 
   handleNextClick = () => {
     const { cursor } = this.state;
-    // выполняем запрос на сервер для получения следующей страницы списка машин
     this.fetchCars(cursor + 1);
   }
 
   fetchCars = (cursor) => {
-    const { brand, model, minYear, maxYear, fuel_type, body_type, show_bitten_cars, minPrice, maxPrice, minHorsePower, maxHorsePower, minMileage, maxMileage } = this.props;
+    const {
+        brand,
+        model,
+        minYear,
+        maxYear,
+        fuel_type,
+        body_type,
+        show_bitten_cars,
+        minPrice,
+        maxPrice,
+        minHorsePower,
+        maxHorsePower,
+        minMileage,
+        maxMileage
+    } = this.props;
 
     this.setState({ isLoading: true });
 
     // выполняем запрос на сервер для получения списка машин
     axios.get(`http://127.0.0.1:5000/cars/search?brand=${brand}&model=${model}&min_year=${minYear}&max_year=${maxYear}&fuel_type=${fuel_type}&body_type=${body_type}&show_bitten_cars=${show_bitten_cars}&min_price=${minPrice}&max_price=${maxPrice}&min_horse_power=${minHorsePower}&max_horse_power=${maxHorsePower}&min_mileage=${minMileage}&max_mileage=${maxMileage}&cursor=${cursor}`)
       .then(response => {
-        if (response.data.results.length === 0) { // проверяем, что список машин не пустой
+        if (response.data.results.length === 0) {
           this.setState({ cars: [], has_next_page: response.data.has_next_page, cursor, isLoading: false });
         } else {
           this.setState({ cars: response.data.results, has_next_page: response.data.has_next_page, cursor, isLoading: false });
         }
-      })
-      .catch(error => {
-        console.log(error);
-        this.setState({ isLoading: false });
       });
   }
 

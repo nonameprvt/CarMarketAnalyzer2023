@@ -10,12 +10,12 @@ class CarSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      brands: [], // список марок машин
-      models: [], // список моделей машин
+      brands: [],
+      models: [],
       fuel_types: [], 
       body_types: [],
-      selectedBrand: null, // выбранная марка машины
-      selectedModel: null, // выбранная модель машины
+      selectedBrand: null,
+      selectedModel: null,
       selectedFuelType: null,
       selectedBodyType: null,
       minYear: null,
@@ -31,35 +31,29 @@ class CarSearch extends Component {
   }
 
   componentDidMount() {
-    // при монтировании компонента загружаем список марок машин
     axios.get('http://127.0.0.1:5000/brand/list')
       .then(response => {
         this.setState({ brands: response.data });
-      })
-      .catch(error => console.log(error));
+      });
 
     axios.get('http://127.0.0.1:5000/fuel-type/list')
       .then(response => {
         this.setState({ fuel_types: response.data });
-      })
-      .catch(error => console.log(error));
+      });
 
     axios.get('http://127.0.0.1:5000/body-type/list')
       .then(response => {
         this.setState({ body_types: response.data });
-      })
-      .catch(error => console.log(error));
+      });
   }
 
   handleBrandChange = (event) => {
     const selectedBrand = event.target.value;
     this.setState({ selectedBrand, selectedModel: null, models: [] });
-    // после выбора марки машины загружаем список моделей
     axios.get(`http://127.0.0.1:5000/model/list?brand=${selectedBrand}`)
     .then(response => {
       this.setState({ models: response.data });
-    })
-    .catch(error => console.log(error));
+    });
   }
 
   handleModelChange = (event) => {
@@ -191,8 +185,16 @@ class CarSearch extends Component {
             className="modal"/>
 
           <div class="switch">
-            <input id="checkbox-id" class="checkbox-input checkbox-input-yes-no" type="checkbox" onChange={this.handleShowBittenChange}/>
-            <label for="checkbox-id" data-on="Показывать битые машины" data-off="Не показывать битые машины"></label>
+            <input
+            id="checkbox-id"
+            class="checkbox-input checkbox-input-yes-no"
+            type="checkbox"
+            onChange={this.handleShowBittenChange}/>
+
+            <label
+            for="checkbox-id"
+            data-on="Показывать битые машины"
+            data-off="Не показывать битые машины"/>
           </div>
         </div>
 
