@@ -5,6 +5,8 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
+from price_prediction import predict
+
 
 class CaptchaException(Exception):
     pass
@@ -102,6 +104,7 @@ def get_by_pages(browser, brand_name):
                 'description': 'Ошибка',
                 'link': 'Ошибка',
                 'market_type': 'avito',
+                'predicted_price': 0,
                 'horse_power': 0,
                 'color': 'Ошибка',
                 'gear_box': 'Ошибка',
@@ -172,6 +175,7 @@ def get_by_pages(browser, brand_name):
 
             if len(price) > 2 * car + 1:
                 car_json['price'] = int(price[2 * car + 1].get_attribute('content'))
+                car_json['predicted_price'] = car_json['price']
 
             if len(seller) > car:
                 car_json['seller_type'] = seller[car].text
@@ -257,6 +261,7 @@ def get_parsed_avito(should_parse_big_brands=False, brand_to_start=None, model_t
             print("parse by brand", brand_name)
             data = []
             parsed_data = get_by_pages(brand_browser, brand_name)
+            parsed_data = predict.convert_dataframe_to_jsons(predict.predict_price(predict.convert_jsons_to_dataframe(parsed_data)))
             for item in parsed_data:
                 data.append(json.loads(item))
             print(len(data))

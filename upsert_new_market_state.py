@@ -176,7 +176,7 @@ def upsert_new_data(data):
     con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = con.cursor()
 
-    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(i.values())).decode('utf-8')
+    args = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(i.values())).decode('utf-8')
                 for i in data)
 
     cur.execute(
@@ -184,7 +184,7 @@ def upsert_new_data(data):
         'item_id, name, price, engine,'
         'mileage, body_type, fuel_type,'
         'transmission, seller_type, city, description,'
-        'link, market_type, horse_power, '
+        'link, market_type, predicted_price, horse_power, '
         'color, gear_box, steering_wheel_side, documents_ok, '
         'owners_counter, car_is_wanted, car_is_busted, brand_name, model_name, year, is_bitten) '
         'VALUES ' + (args) +
