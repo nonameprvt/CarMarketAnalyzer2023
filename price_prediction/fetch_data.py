@@ -1,9 +1,20 @@
+import typing as tp
+import json
+
 import csv
 from pathlib import Path
+
+import pandas as pd
 from psycopg2 import connect
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 import db_properties  # contains private data so this file is not uploaded to the repository
+
+COL_NAMES: tp.List[str] = ['id', 'item_id', 'name', 'price', 'engine', 'mileage', 'body_type', 'fuel_type',
+                           'transmission', 'seller_type', 'city', 'description', 'link', 'market_type',
+                           'predicted_price', 'horse_power', 'color', 'gear_box', 'steering_wheel_side',
+                           'documents_ok', 'owners_counter', 'car_is_wanted', 'car_is_busted', 'brand_name',
+                           'model_name', 'year', 'is_bitten']
 
 
 def get_csv_from_market_state(output_path: Path, sold: bool = False, overwrite: bool = False) -> None:
@@ -11,12 +22,8 @@ def get_csv_from_market_state(output_path: Path, sold: bool = False, overwrite: 
         return
 
     table_name: str = 'selled_cars' if sold else 'current_cars_market_states'
-    col_names: list[str] = ['id', 'item_id', 'name', 'price', 'engine', 'mileage', 'body_type', 'fuel_type',
-                            'transmission', 'seller_type', 'city', 'description', 'link', 'market_type',
-                            'predicted_price', 'horse_power', 'color', 'gear_box', 'steering_wheel_side',
-                            'documents_ok', 'owners_counter', 'car_is_wanted', 'car_is_busted', 'brand_name',
-                            'model_name', 'year', 'is_bitten']
-    first_line: str = ','.join(col_names)
+
+    first_line: str = ','.join(COL_NAMES)
 
     con = connect(
         user=db_properties.LOGIN,
@@ -41,3 +48,12 @@ def get_csv_from_market_state(output_path: Path, sold: bool = False, overwrite: 
 
     cur.close()
     con.close()
+
+
+def convert_jsons_to_dataframe(jsons: tp.List[str]) -> pd.DataFrame:
+    dicts = [json.loads(row) for row in jsons]
+    return pd.DataFrame.from_records(dicts)
+
+
+def convert_dataframe_to_jsons(df: pd.DataFrame) -> tp.List[str]:
+    return [json.dumps(row.to_dict()) for _, row in df.iterrows()]
