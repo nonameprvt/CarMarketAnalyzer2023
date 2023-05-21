@@ -1,10 +1,8 @@
 import typing as tp
-import json
 
 import csv
 from pathlib import Path
 
-import pandas as pd
 from psycopg2 import connect
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -48,12 +46,3 @@ def get_csv_from_market_state(output_path: Path, sold: bool = False, overwrite: 
 
     cur.close()
     con.close()
-
-
-def convert_jsons_to_dataframe(jsons: tp.List[str]) -> pd.DataFrame:
-    dicts = [json.loads(row) for row in jsons]
-    return pd.DataFrame.from_records(dicts)
-
-
-def convert_dataframe_to_jsons(df: pd.DataFrame) -> tp.List[str]:
-    return [json.dumps(row.to_dict()) for _, row in df.iterrows()]
