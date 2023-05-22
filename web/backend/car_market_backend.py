@@ -54,7 +54,8 @@ def build_where_statement(
         min_horse_power=None,
         max_horse_power=None,
         min_mileage=None,
-        max_mileage=None
+        max_mileage=None,
+        show_good_price=None,
 ):
     where_statement = ''
     if check_query_param_exist(min_year):
@@ -69,7 +70,7 @@ def build_where_statement(
         where_statement += build_statement_prefix(where_statement) + ' fuel_type = \'' + fuel_type + '\''
     if check_query_param_exist(body_type):
         where_statement += build_statement_prefix(where_statement) + ' body_type = \'' + body_type + '\''
-    if check_query_param_exist(show_bitten_cars):
+    if check_query_param_exist(show_bitten_cars) and show_bitten_cars == 'true':
         where_statement += build_statement_prefix(where_statement) + ' NOT is_bitten'
     if check_query_param_exist(min_price) and check_param_is_digit(min_price):
         where_statement += build_statement_prefix(where_statement) + ' price >= ' + min_price
@@ -83,6 +84,9 @@ def build_where_statement(
         where_statement += build_statement_prefix(where_statement) + ' mileage >= ' + min_mileage
     if check_query_param_exist(max_mileage):
         where_statement += build_statement_prefix(where_statement) + ' mileage <= ' + max_mileage
+    if check_query_param_exist(show_good_price) and show_good_price == 'true':
+        where_statement += build_statement_prefix(where_statement)
+        where_statement += ' predicted_price IS NULL OR (0.7 * predicted_price <= price AND price <= 1.1 * predicted_price)'
 
     return where_statement
 
@@ -156,13 +160,14 @@ def cars_search():
         request.args.get('min_horse_power'),
         request.args.get('max_horse_power'),
         request.args.get('min_mileage'),
-        request.args.get('max_mileage')
+        request.args.get('max_mileage'),
+        request.args.get('show_good_price'),
     )
     sz = int(cursor) * 11 + 12
     sql_text = (
         'SELECT item_id, brand_name, model_name, year, body_type, '
         'fuel_type, mileage, engine, transmission, horse_power, is_bitten, '
-        'price, market_type, link FROM current_cars_market_states ' + 
+        'price, market_type, link, predicted_price FROM current_cars_market_states ' + 
         where_statement + ' ORDER BY item_id LIMIT ' + str(sz) + ';'
     )
 
@@ -187,7 +192,8 @@ def cars_search():
             'is_bitten': 'Да' if tmp[i][10] else 'Нет',
             'price': tmp[i][11],
             'market_type':tmp[i][12],
-            'link': tmp[i][13]
+            'link': tmp[i][13],
+            'predicted_price': tmp[i][14],
         })
 
     response['results'] = car_list

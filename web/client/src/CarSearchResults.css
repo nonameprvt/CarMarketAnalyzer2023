@@ -10,7 +10,7 @@
 }
 
 .tab-content {
-	height: 150px;
+	height: 170px;
 	width: 200px;
 	flex-flow: column wrap;
 	position: relative;

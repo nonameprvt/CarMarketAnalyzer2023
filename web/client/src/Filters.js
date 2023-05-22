@@ -27,6 +27,7 @@ class CarSearch extends Component {
       minPrice: null,
       maxPrice: null,
       showBittenCars: false,
+      showGoodPrice: false,
     }
   }
 
@@ -108,6 +109,10 @@ class CarSearch extends Component {
     this.setState({ showBittenCars: !this.showBittenCars });
   }
 
+  handleShowGoodPriceChange = () => {
+    this.setState({ showGoodPrice: !this.showGoodPrice });
+  }
+
   render() {
     const {
       brands,
@@ -119,6 +124,7 @@ class CarSearch extends Component {
       selectedFuelType,
       selectedBodyType,
       showBittenCars,
+      showGoodPrice,
       minYear,
       maxYear,
       minHorsePower,
@@ -196,6 +202,19 @@ class CarSearch extends Component {
             data-on="Показывать битые машины"
             data-off="Не показывать битые машины"/>
           </div>
+
+          <div class="switch">
+            <input
+            id="checkbox-id-2"
+            class="checkbox-input checkbox-input-yes-no"
+            type="checkbox"
+            onChange={this.handleShowGoodPriceChange}/>
+
+            <label
+            for="checkbox-id-2"
+            data-on="Показывать хорошую цену"
+            data-off="Не показывать хорошую цену"/>
+          </div>
         </div>
 
         <div class="right-column">
@@ -208,6 +227,7 @@ class CarSearch extends Component {
             fuel_type={selectedFuelType}
             body_type={selectedBodyType}
             show_bitten_cars={showBittenCars}
+            show_good_price={showGoodPrice}
             minPrice={minPrice}
             maxPrice={maxPrice}
             minHorsePower={minHorsePower} 
