@@ -31,17 +31,17 @@ class CarSearch extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:5000/brand/list')
+    axios.get('http://127.0.0.1:5050/brand/list')
       .then(response => {
         this.setState({ brands: response.data });
       });
 
-    axios.get('http://127.0.0.1:5000/fuel-type/list')
+    axios.get('http://127.0.0.1:5050/fuel-type/list')
       .then(response => {
         this.setState({ fuel_types: response.data });
       });
 
-    axios.get('http://127.0.0.1:5000/body-type/list')
+    axios.get('http://127.0.0.1:5050/body-type/list')
       .then(response => {
         this.setState({ body_types: response.data });
       });
@@ -50,7 +50,7 @@ class CarSearch extends Component {
   handleBrandChange = (event) => {
     const selectedBrand = event.target.value;
     this.setState({ selectedBrand, selectedModel: null, models: [] });
-    axios.get(`http://127.0.0.1:5000/model/list?brand=${selectedBrand}`)
+    axios.get(`http://127.0.0.1:5050/model/list?brand=${selectedBrand}`)
     .then(response => {
       this.setState({ models: response.data });
     });

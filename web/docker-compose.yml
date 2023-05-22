@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./backend/Dockerfile
     ports:
-      - "5000:5000"
+      - "5050:5050"
     volumes:
      - .:/code
   client:
@@ -13,7 +13,7 @@ services:
       context: .
       dockerfile: ./client/Dockerfile
     environment:
-      - APP_BACKEND_URL=backend:5000
+      - APP_BACKEND_URL=backend:5050
     depends_on:
       - backend
     ports:

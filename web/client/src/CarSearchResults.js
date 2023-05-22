@@ -55,7 +55,7 @@ class CarSearchResults extends Component {
     this.setState({ isLoading: true });
 
     // выполняем запрос на сервер для получения списка машин
-    axios.get(`http://127.0.0.1:5000/cars/search?brand=${brand}&model=${model}&min_year=${minYear}&max_year=${maxYear}&fuel_type=${fuel_type}&body_type=${body_type}&show_bitten_cars=${show_bitten_cars}&min_price=${minPrice}&max_price=${maxPrice}&min_horse_power=${minHorsePower}&max_horse_power=${maxHorsePower}&min_mileage=${minMileage}&max_mileage=${maxMileage}&cursor=${cursor}`)
+    axios.get(`http://127.0.0.1:5050/cars/search?brand=${brand}&model=${model}&min_year=${minYear}&max_year=${maxYear}&fuel_type=${fuel_type}&body_type=${body_type}&show_bitten_cars=${show_bitten_cars}&min_price=${minPrice}&max_price=${maxPrice}&min_horse_power=${minHorsePower}&max_horse_power=${maxHorsePower}&min_mileage=${minMileage}&max_mileage=${maxMileage}&cursor=${cursor}`)
       .then(response => {
         if (response.data.results.length === 0) {
           this.setState({ cars: [], has_next_page: response.data.has_next_page, cursor, isLoading: false });
@@ -80,7 +80,7 @@ class CarSearchResults extends Component {
       <div class="car-table">
 		<ul class="s3">
           {cars.map(car => (
-            <li><a href={car.link} class="link" rel="noreferrer" target="_blank"><ul class="tab-content" key={car.id}>
+            <li><a href={car.link} class="link" rel="noopener noreferrer" target="_blank"><ul class="tab-content" key={car.id}>
 			  <li> Название: {car.brand} {car.model} </li> 
 			  <li> Вид кузова: {car.body_type}</li>
 			  <li> Вид топлива: {car.fuel_type}</li> 
