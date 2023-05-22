@@ -1,11 +1,29 @@
 import json
+import os
 import typing as tp
 
 import pandas as pd
+import pickle
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor
+
+from price_prediction.preprocess import preprocess
 
 
-def predict_price(data: pd.DataFrame) -> pd.DataFrame:
-    data.predicted_price = data.price
+def predict_price(data_: pd.DataFrame) -> pd.DataFrame:
+    pretrained_dir = os.path.dirname(__file__) + '/pretrained'
+    data = preprocess(data_)
+
+    with open(pretrained_dir + '/col_t.pkl', 'rb') as f:
+        col_t: ColumnTransformer = pickle.load(f)
+
+    with open(pretrained_dir + '/random_forest.pkl', 'rb') as f:
+        forest: RandomForestRegressor = pickle.load(f)
+
+    price = forest.predict(col_t.transform(data))
+
+    data = data_.copy()
+    data.predicted_price = price
     return data
 
 

@@ -11,45 +11,21 @@ from torch.utils.data import DataLoader
 
 from price_prediction.dataset import CarsDataset
 from price_prediction.models import LSTMModel, AttentionModel
+from price_prediction.preprocess import preprocess, make_features_linear, get_column_transformer_for_linear_features
 from price_prediction.train import train
 
 device = torch.device(
     'cuda:0' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
 
 
-def preprocess(data: pd.DataFrame) -> None:
-    bad_cols = [col for col in data.columns if (data[col] == 'Ошибка').sum() > len(data) / 2]
-    data.drop(columns=bad_cols, inplace=True)
-    data.model_name = data.model_name.fillna('Ошибка')
-    data.brand_name = data.brand_name.fillna('Ошибка')
-
-    data.is_bitten = data.is_bitten.astype(int)
-
-    data['year_lin'] = data.year * (data.year >= 2000)
-    borders = [-math.inf] + list(range(1920, 2001, 5)) + [math.inf]
-    for i in range(1, len(borders)):
-        data[f'year_range_{i}'] = ((borders[i - 1] <= data.year) & (data.year < borders[i])).astype(int)
-
-    data['small_mileage'] = (data.mileage < 50000).astype(int)
-    data['large_mileage'] = 1 - data.small_mileage
-
-
 def get_loaders(data: pd.DataFrame,
                 model_type: str = 'bpe', vocab_size: int = 2000,
                 batch_size=256) -> tp.Tuple[DataLoader, DataLoader]:
-    preprocess(data)
+    data = make_features_linear(preprocess(data))
 
     data_train, data_val, y_train, y_val = train_test_split(data, data.price.values, test_size=0.2, random_state=42)
 
-    categorical = ['engine', 'body_type', 'fuel_type', 'transmission', 'seller_type', 'brand_name', 'model_name']
-    numeric = ['horse_power', 'year_lin']
-    passthrough = [col for col in data.columns if ((data[col] == 0) | (data[col] == 1)).all()]
-
-    column_transformer = ColumnTransformer([
-        ('scaling', StandardScaler(), numeric),
-        ('ohe', OneHotEncoder(handle_unknown='ignore'), categorical),
-        ('passthrough', 'passthrough', passthrough)
-    ], sparse_threshold=0.0)
+    column_transformer = get_column_transformer_for_linear_features(data, sparse_threshold=0.0)
 
     features_train = column_transformer.fit_transform(data_train)
     features_val = column_transformer.transform(data_val)

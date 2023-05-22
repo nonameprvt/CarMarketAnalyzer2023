@@ -4,3 +4,10 @@ psycopg2-binary~=2.8.6
 Flask==2.3.2
 Flask-Cors==3.0.10
 itsdangerous==2.1.2
+
+torch~=2.0.1
+wandb~=0.15.3
+tqdm~=4.65.0
+numpy~=1.24.3
+sentencepiece~=0.1.99
+scikit-learn~=1.2.2
