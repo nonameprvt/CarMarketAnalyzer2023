@@ -86,7 +86,7 @@ def build_where_statement(
         where_statement += build_statement_prefix(where_statement) + ' mileage <= ' + max_mileage
     if check_query_param_exist(show_good_price) and show_good_price == 'true':
         where_statement += build_statement_prefix(where_statement)
-        where_statement += ' predicted_price IS NULL OR (0.7 * predicted_price <= price AND price <= 1.1 * predicted_price)'
+        where_statement += ' (predicted_price IS NULL OR (0.7 * predicted_price <= price AND price <= 1.1 * predicted_price))'
 
     return where_statement
 
@@ -163,6 +163,7 @@ def cars_search():
         request.args.get('max_mileage'),
         request.args.get('show_good_price'),
     )
+    print(where_statement)
     sz = int(cursor) * 11 + 12
     sql_text = (
         'SELECT item_id, brand_name, model_name, year, body_type, '
